@@ -52,7 +52,7 @@ exit 1; }
 }
 server() {
 printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Starting server...\e[0m\n"
-default_port2=$(seq 1111 4444 | sort -R | head -n1)
+default_port2=$(seq 1111 4443 | sort -R | head -n1)
 ssh -o StrictHostKeyChecking=no -R $port:localhost:4444 serveo.net -R $default_port2:localhost:3333 > /dev/null 2>&1 &
 sleep 4
 php -S localhost:3333 > /dev/null 2>&1 &
