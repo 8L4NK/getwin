@@ -73,6 +73,7 @@ printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Compiling... \e[0m\n"
 i686-w64-mingw32-g++ -o $payload_name.exe program.cpp -lws2_32
 printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Saved:\e[0m\e[1;77m %s.exe\n" $payload_name
 printf "\e[1;93m[\e[0m\e[1;77m!\e[0m\e[1;93m] Please, don't upload to virustotal.com !\e[0m\n"
+rm -rf program.cpp
 fi
 
 }
